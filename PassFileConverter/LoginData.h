@@ -6,10 +6,12 @@
 
 #include <string>
 
-enum class DataOutputMode
+enum class LoginDataType
 {
-    Undef,
-    Csv,
+    Undefined,
+    Kapersky,
+    Microsoft,
+    Google,
     MAX
 };
 
@@ -38,7 +40,7 @@ public:
     
     void resetData();
     
-    const std::string getDataString(const DataOutputMode& mode) const;
+    const std::string getDataString(const LoginDataType& mode) const;
 
 protected:
     std::string m_name;

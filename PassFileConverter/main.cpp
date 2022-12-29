@@ -7,20 +7,23 @@
 
 int main()
 {
+    constexpr LoginDataType inputType = LoginDataType::Kapersky;
+    constexpr LoginDataType outputType = LoginDataType::Kapersky;
+    
     std::unique_ptr<DataLoader> dataLoader = std::make_unique<DataLoader>();
 
     try
     {
         const std::string input_path = Helper::askQuestion("input file path: ");
-        dataLoader->loadFile(input_path, LoginDataOrigin::Kapersky);
+        dataLoader->loadFile(input_path, inputType);
 
         const std::string output_path = Helper::askQuestion("output file path: ");
-        dataLoader->saveFile(output_path, LoginDataOrigin::Google);
+        dataLoader->saveFile(output_path, outputType);
 
         if (dataLoader->hasInvalidData())
         {
             const std::string invalid_output_path = Helper::askQuestion("invalid data output file path: ");
-            dataLoader->exportInvalidData(invalid_output_path);
+            dataLoader->exportInvalidData(invalid_output_path, outputType);
         }
     }
     catch (const std::exception& e)

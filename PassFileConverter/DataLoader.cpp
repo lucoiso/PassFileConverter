@@ -7,7 +7,7 @@
 #include <filesystem>
 #include <fstream>
 
-void DataLoader::loadFile(const std::string& path, const LoginDataOrigin& type)
+void DataLoader::loadFile(const std::string& path, const LoginDataType& type)
 {
 	if (!std::filesystem::exists(path))
 	{
@@ -27,19 +27,27 @@ void DataLoader::loadFile(const std::string& path, const LoginDataOrigin& type)
 
 	switch (type)
 	{
-	case LoginDataOrigin::Kapersky:
-		readKaperskyData(stream);
-		break;
+		case LoginDataType::Kapersky:
+			readKaperskyData(stream);
+			break;
 
-	default:
-		throw std::invalid_argument("not implemented yet");
-		break;
+		case LoginDataType::Google:
+			readGoogleData(stream);
+			break;
+
+		case LoginDataType::Microsoft:
+			readMicrosoftData(stream);
+			break;
+
+		default:
+			throw std::invalid_argument("not implemented yet");
+			break;
 	}
 
 	stream.close();
 }
 
-void DataLoader::saveFile(const std::string& path, const LoginDataOrigin& type)
+void DataLoader::saveFile(const std::string& path, const LoginDataType& type)
 {
 	if (m_valid_data.empty())
 	{
@@ -56,8 +64,16 @@ void DataLoader::saveFile(const std::string& path, const LoginDataOrigin& type)
 
 	switch (type)
 	{
-		case LoginDataOrigin::Google:
+		case LoginDataType::Kapersky:
+			outputKaperskyData(stream);
+			break;
+			
+		case LoginDataType::Google:
 			outputGoogleData(stream);
+			break;
+
+		case LoginDataType::Microsoft:
+			outputMicrosoftData(stream);
 			break;
 
 		default:
@@ -68,7 +84,7 @@ void DataLoader::saveFile(const std::string& path, const LoginDataOrigin& type)
 	stream.close();
 }
 
-void DataLoader::exportInvalidData(const std::string& path)
+void DataLoader::exportInvalidData(const std::string& path, const LoginDataType& type)
 {
 	if (m_invalid_data.empty())
 	{
@@ -87,7 +103,7 @@ void DataLoader::exportInvalidData(const std::string& path)
 
 	for (const LoginData& iterator : m_invalid_data)
 	{
-		stream << iterator.getDataString(DataOutputMode::Csv) << std::endl;
+		stream << iterator.getDataString(type) << std::endl;
 	}
 
 	stream.close();
@@ -153,12 +169,32 @@ void DataLoader::readKaperskyData(std::ifstream& stream)
 	}
 }
 
+void DataLoader::outputKaperskyData(std::ofstream& stream) const
+{
+	throw std::invalid_argument("not implemented yet");
+}
+
+void DataLoader::readGoogleData(std::ifstream& stream)
+{
+	throw std::invalid_argument("not implemented yet");
+}
+
 void DataLoader::outputGoogleData(std::ofstream& stream) const
 {
 	stream << "name,url,username,password" << std::endl;
 
 	for (const LoginData& iterator : m_valid_data)
 	{
-		stream << iterator.getDataString(DataOutputMode::Csv) << std::endl;
+		stream << iterator.getDataString(LoginDataType::Google) << std::endl;
 	}
+}
+
+void DataLoader::readMicrosoftData(std::ifstream& stream)
+{
+	throw std::invalid_argument("not implemented yet");
+}
+
+void DataLoader::outputMicrosoftData(std::ofstream& stream) const
+{
+	throw std::invalid_argument("not implemented yet");
 }

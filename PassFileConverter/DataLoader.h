@@ -7,24 +7,15 @@
 #include "LoginData.h"
 #include <vector>
 
-enum class LoginDataOrigin
-{
-	Undef,
-	Kapersky,
-	Microsoft,
-	Google,
-	MAX
-};
-
 class DataLoader
 {
 public:
 	constexpr DataLoader() = default;
 	constexpr ~DataLoader() = default;
 
-	void loadFile(const std::string& path, const LoginDataOrigin& type);
-	void saveFile(const std::string& path, const LoginDataOrigin& type);
-	void exportInvalidData(const std::string& path);
+	void loadFile(const std::string& path, const LoginDataType& type);
+	void saveFile(const std::string& path, const LoginDataType& type);
+	void exportInvalidData(const std::string& path, const LoginDataType& type);
 
 	const bool hasInvalidData() const;
 
@@ -36,5 +27,11 @@ private:
 	std::vector<LoginData> m_invalid_data;
 
 	void readKaperskyData(std::ifstream& stream);
+	void outputKaperskyData(std::ofstream& stream) const;
+
+	void readGoogleData(std::ifstream& stream);
 	void outputGoogleData(std::ofstream& stream) const;
+
+	void readMicrosoftData(std::ifstream& stream);
+	void outputMicrosoftData(std::ofstream& stream) const;
 };

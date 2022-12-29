@@ -70,11 +70,11 @@ void LoginData::resetData()
 	m_password.clear();
 }
 
-const std::string LoginData::getDataString(const DataOutputMode& mode) const
+const std::string LoginData::getDataString(const LoginDataType& mode) const
 {
 	switch (mode)
 	{
-		case DataOutputMode::Csv:
+		case LoginDataType::Google:
 			return m_name + "," + m_url + "," + m_username + "," + m_password;
 			
 		default:
