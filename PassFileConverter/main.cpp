@@ -8,7 +8,7 @@
 int main()
 {
     constexpr LoginDataType inputType = LoginDataType::Kapersky;
-    constexpr LoginDataType outputType = LoginDataType::Kapersky;
+    constexpr LoginDataType outputType = LoginDataType::Google;
     
     std::unique_ptr<DataLoader> dataLoader = std::make_unique<DataLoader>();
 
