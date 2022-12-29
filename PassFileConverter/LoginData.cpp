@@ -1,6 +1,6 @@
 // Author: Lucas Oliveira Vilas-Bôas
 // Year: 2022
-// Repository: 
+// Repository: https://github.com/lucoiso/PassFileConverter
 
 #include "LoginData.h"
 #include "HelperLib.h"
@@ -76,9 +76,6 @@ const std::string LoginData::getDataString(const DataOutputMode& mode) const
 	{
 		case DataOutputMode::Csv:
 			return m_name + "," + m_url + "," + m_username + "," + m_password;
-
-		case DataOutputMode::NameOnly:
-			return m_name;
 			
 		default:
 			throw std::invalid_argument("not implemented yet");

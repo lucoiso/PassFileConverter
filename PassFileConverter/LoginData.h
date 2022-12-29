@@ -1,6 +1,6 @@
 // Author: Lucas Oliveira Vilas-Bôas
 // Year: 2022
-// Repository: 
+// Repository: https://github.com/lucoiso/PassFileConverter
 
 #pragma once
 
@@ -10,7 +10,6 @@ enum class DataOutputMode
 {
     Undef,
     Csv,
-    NameOnly,
     MAX
 };
 
