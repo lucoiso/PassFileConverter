@@ -10,8 +10,8 @@ enum class LoginDataType
 {
     Undefined,
     Kapersky,
-    Microsoft,
     Google,
+    Microsoft,
     MAX
 };
 
@@ -40,7 +40,7 @@ public:
     
     void resetData();
     
-    const std::string getDataString(const LoginDataType& mode) const;
+    const std::string getDataString() const;
 
 protected:
     std::string m_name;

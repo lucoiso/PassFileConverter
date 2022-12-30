@@ -4,26 +4,24 @@
 
 #include "DataLoader.h"
 #include "HelperLib.h"
+#include "Constants.h"
 
 int main()
-{
-    constexpr LoginDataType inputType = LoginDataType::Kapersky;
-    constexpr LoginDataType outputType = LoginDataType::Google;
-    
+{    
     std::unique_ptr<DataLoader> dataLoader = std::make_unique<DataLoader>();
 
     try
     {
         const std::string input_path = Helper::askQuestion("input file path: ");
-        dataLoader->loadFile(input_path, inputType);
+        dataLoader->loadFile(input_path);
 
         const std::string output_path = Helper::askQuestion("output file path: ");
-        dataLoader->saveFile(output_path, outputType);
+        dataLoader->saveFile(output_path);
 
         if (dataLoader->hasInvalidData())
         {
             const std::string invalid_output_path = Helper::askQuestion("invalid data output file path: ");
-            dataLoader->exportInvalidData(invalid_output_path, outputType);
+            dataLoader->exportInvalidData(invalid_output_path);
         }
     }
     catch (const std::exception& e)

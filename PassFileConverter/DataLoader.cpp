@@ -4,10 +4,16 @@
 
 #include "DataLoader.h"
 #include "HelperLib.h"
+#include "Constants.h"
 #include <filesystem>
 #include <fstream>
 
-void DataLoader::loadFile(const std::string& path, const LoginDataType& type)
+const bool DataLoader::hasInvalidData() const
+{
+	return !m_invalid_data.empty();
+}
+
+void DataLoader::loadFile(const std::string& path)
 {
 	if (!std::filesystem::exists(path))
 	{
@@ -25,18 +31,15 @@ void DataLoader::loadFile(const std::string& path, const LoginDataType& type)
 	m_valid_data.clear();
 	m_invalid_data.clear();
 
-	switch (type)
+	switch (Helper::inputType)
 	{
 		case LoginDataType::Kapersky:
 			readKaperskyData(stream);
 			break;
 
 		case LoginDataType::Google:
-			readGoogleData(stream);
-			break;
-
 		case LoginDataType::Microsoft:
-			readMicrosoftData(stream);
+			readCSVPasswordData(stream);
 			break;
 
 		default:
@@ -47,11 +50,21 @@ void DataLoader::loadFile(const std::string& path, const LoginDataType& type)
 	stream.close();
 }
 
-void DataLoader::saveFile(const std::string& path, const LoginDataType& type)
+void DataLoader::saveFile(const std::string& path)
 {
-	if (m_valid_data.empty())
+	writeData(path, m_valid_data);
+}
+
+void DataLoader::exportInvalidData(const std::string& path)
+{
+	writeData(path, m_invalid_data);
+}
+
+void DataLoader::writeData(const std::string& path, const std::vector<LoginData>& data)
+{
+	if (data.empty())
 	{
-		throw std::invalid_argument("no data to save");
+		return;
 	}
 
 	std::filesystem::path filePath(path);
@@ -62,18 +75,15 @@ void DataLoader::saveFile(const std::string& path, const LoginDataType& type)
 		return;
 	}
 
-	switch (type)
+	switch (Helper::outputType)
 	{
 		case LoginDataType::Kapersky:
-			outputKaperskyData(stream);
-			break;
-			
-		case LoginDataType::Google:
-			outputGoogleData(stream);
+			writeKaperskyData(stream, data);
 			break;
 
+		case LoginDataType::Google:
 		case LoginDataType::Microsoft:
-			outputMicrosoftData(stream);
+			writeCSVPasswordData(stream, data);
 			break;
 
 		default:
@@ -82,40 +92,16 @@ void DataLoader::saveFile(const std::string& path, const LoginDataType& type)
 	}
 
 	stream.close();
-}
-
-void DataLoader::exportInvalidData(const std::string& path, const LoginDataType& type)
-{
-	if (m_invalid_data.empty())
-	{
-		return;
-	}
-
-	std::filesystem::path filePath(path);
-	std::ofstream stream(filePath);
-
-	if (!stream.is_open())
-	{
-		return;
-	}
-
-	stream << "name,url,username,password" << std::endl;
-
-	for (const LoginData& iterator : m_invalid_data)
-	{
-		stream << iterator.getDataString(type) << std::endl;
-	}
-
-	stream.close();
-}
-
-const bool DataLoader::hasInvalidData() const
-{
-	return !m_invalid_data.empty();
 }
 
 void DataLoader::insertData(const LoginData& data)
 {
+	if (Helper::outputType != LoginDataType::Google)
+	{
+		m_valid_data.push_back(data);
+		return;
+	}
+	
 	if (data.hasInvalidData())
 	{
 		m_invalid_data.push_back(data);
@@ -169,32 +155,22 @@ void DataLoader::readKaperskyData(std::ifstream& stream)
 	}
 }
 
-void DataLoader::outputKaperskyData(std::ofstream& stream) const
+void DataLoader::writeKaperskyData(std::ofstream& stream, const std::vector<LoginData>& data) const
 {
 	throw std::invalid_argument("not implemented yet");
 }
 
-void DataLoader::readGoogleData(std::ifstream& stream)
+void DataLoader::readCSVPasswordData(std::ifstream& stream)
 {
 	throw std::invalid_argument("not implemented yet");
 }
 
-void DataLoader::outputGoogleData(std::ofstream& stream) const
+void DataLoader::writeCSVPasswordData(std::ofstream& stream, const std::vector<LoginData>& data) const
 {
 	stream << "name,url,username,password" << std::endl;
 
-	for (const LoginData& iterator : m_valid_data)
+	for (const LoginData& iterator : data)
 	{
-		stream << iterator.getDataString(LoginDataType::Google) << std::endl;
+		stream << iterator.getDataString() << std::endl;
 	}
-}
-
-void DataLoader::readMicrosoftData(std::ifstream& stream)
-{
-	throw std::invalid_argument("not implemented yet");
-}
-
-void DataLoader::outputMicrosoftData(std::ofstream& stream) const
-{
-	throw std::invalid_argument("not implemented yet");
 }

@@ -13,25 +13,23 @@ public:
 	constexpr DataLoader() = default;
 	constexpr ~DataLoader() = default;
 
-	void loadFile(const std::string& path, const LoginDataType& type);
-	void saveFile(const std::string& path, const LoginDataType& type);
-	void exportInvalidData(const std::string& path, const LoginDataType& type);
-
 	const bool hasInvalidData() const;
-
-protected:
-	virtual void insertData(const LoginData& data);
 	
+	void loadFile(const std::string& path);
+	void saveFile(const std::string& path);
+	void exportInvalidData(const std::string& path);
+
 private:
 	std::vector<LoginData> m_valid_data;
 	std::vector<LoginData> m_invalid_data;
 
+	void writeData(const std::string& path, const std::vector<LoginData>& data);	
+	virtual void insertData(const LoginData& data);
+
 	void readKaperskyData(std::ifstream& stream);
-	void outputKaperskyData(std::ofstream& stream) const;
+	void writeKaperskyData(std::ofstream& stream, const std::vector<LoginData>& data) const;
 
-	void readGoogleData(std::ifstream& stream);
-	void outputGoogleData(std::ofstream& stream) const;
+	void readCSVPasswordData(std::ifstream& stream);
+	void writeCSVPasswordData(std::ofstream& stream, const std::vector<LoginData>& data) const;
 
-	void readMicrosoftData(std::ifstream& stream);
-	void outputMicrosoftData(std::ofstream& stream) const;
 };

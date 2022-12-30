@@ -4,6 +4,7 @@
 
 #include "LoginData.h"
 #include "HelperLib.h"
+#include "Constants.h"
 
 #pragma region Getters and Setters
 void LoginData::setName(const std::string value)
@@ -70,11 +71,12 @@ void LoginData::resetData()
 	m_password.clear();
 }
 
-const std::string LoginData::getDataString(const LoginDataType& mode) const
+const std::string LoginData::getDataString() const
 {
-	switch (mode)
+	switch (Helper::outputType)
 	{
 		case LoginDataType::Google:
+		case LoginDataType::Microsoft:
 			return m_name + "," + m_url + "," + m_username + "," + m_password;
 			
 		default:

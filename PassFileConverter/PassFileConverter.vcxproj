@@ -137,6 +137,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Constants.h" />
     <ClInclude Include="DataLoader.h" />
     <ClInclude Include="LoginData.h" />
   </ItemGroup>
